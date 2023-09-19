@@ -1,22 +1,28 @@
-      const board = ["x", null, null, null, null, null, null, null, null];
+      const startingBoard = [null, null, null, null, null, null, null, null, null];
       let sign = "X";
-      const button = document.getElementById("reset-btn");
-      button.onclick = () => reset(board);
 
-      render(board);
+      render(startingBoard); //render the inital empty board
 
       function render(board) {
-        const boardElement = document.createElement("div");
+
+        let boardElement = document.createElement("div");
         boardElement.id = "container";
         let i = 0;
-        board.forEach((position, index) => {
-          const element = document.createElement("div");
-          element.classList.add("p");
-          element.id = `p${i}`;
-          element.addEventListener("click", () => play(index, board));
-          boardElement.appendChild(element);
+
+        // Remove existing child elements from the boardElement
+        board.forEach((square, index) => {
+          const squareElement = document.createElement("div");
+          squareElement.classList.add("p");
+          squareElement.id = `p${index}`;
+          squareElement.textContent = square;
+          squareElement.addEventListener("click", () => {
+            const newBoard = play(index, board);
+            render(newBoard);
+          });
+          boardElement.append(squareElement);
           i++;
         });
+        
         document.body.replaceChildren(boardElement);
       }
 
@@ -33,24 +39,27 @@
         ];
       }
 
-      function play(position, board) {
-        const newBoardState = board;
-        if (newBoardState[position] === null) {
-          newBoardState[position] = sign;
-          board = newBoardState;
-          document.getElementById(`p${position}`).innerText = sign;
+      function play(square, board) {
+        console.log(square)
+        const newBoardState = board.slice(); 
+        console.log(newBoardState);
+
+        if (newBoardState[square] === null) {
+          newBoardState[square] = sign;
+          const divElement = document.getElementById(`p${square}`).innerHTML = sign;
+          console.log(divElement);
           sign = sign === "X" ? "O" : "X";
-          render(board);
+          return newBoardState;
         }
       }
 
       function reset(b) {
-        console.log(board);
-        let emptyBoard = b;
-        emptyBoard.forEach((el)=> (el = null));
-        console.log(emptyBoard[0]==null);
-        board = emptyBoard
-        console.log(board[0]==null);
+        // console.log(board);
+        // let emptyBoard = b;
+        // emptyBoard.forEach((el)=> (el = null));
+        // console.log(emptyBoard[0]==null);
+        // board = emptyBoard;
+        // console.log(board[0]==null);
         /* let arr = Array.from(document.getElementsByClassName("p"));
         console.log(arr.length);
         arr.forEach((element) => (element.innerText = "")); */
