@@ -4,7 +4,6 @@
       render(startingBoard); //render the inital empty board
 
       function render(board) {
-
         let boardElement = document.createElement("div");
         boardElement.id = "container";
         let i = 0;
@@ -22,8 +21,8 @@
           boardElement.append(squareElement);
           i++;
         });
-        
-        document.body.replaceChildren(boardElement);
+        const rootDiv = document.getElementById("root");
+        rootDiv.replaceChildren(boardElement);
       }
 
       function isWon(board) {
@@ -53,14 +52,6 @@
         }
       }
 
-      function reset(b) {
-        // console.log(board);
-        // let emptyBoard = b;
-        // emptyBoard.forEach((el)=> (el = null));
-        // console.log(emptyBoard[0]==null);
-        // board = emptyBoard;
-        // console.log(board[0]==null);
-        /* let arr = Array.from(document.getElementsByClassName("p"));
-        console.log(arr.length);
-        arr.forEach((element) => (element.innerText = "")); */
+      function reset() {
+        render(startingBoard);
       }
