@@ -6,9 +6,7 @@
       function render(board) {
         let boardElement = document.createElement("div");
         boardElement.id = "container";
-        let i = 0;
 
-        // Remove existing child elements from the boardElement
         board.forEach((square, index) => {
           const squareElement = document.createElement("div");
           squareElement.classList.add("p");
@@ -16,11 +14,11 @@
           squareElement.textContent = square;
           squareElement.addEventListener("click", () => {
             const newBoard = play(index, board);
-            render(newBoard);
+            render(newBoard); // i know this is dumb, but its easy on my small brain :x
           });
           boardElement.append(squareElement);
-          i++;
         });
+
         const rootDiv = document.getElementById("root");
         rootDiv.replaceChildren(boardElement);
       }
