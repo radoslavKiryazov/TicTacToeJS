@@ -1,8 +1,20 @@
-const startingBoard = [null, null, null, null, null, null, null, null, null]; //Should be replaced with an object Board
+const createBoard = () => {
+  const createSquare = () => {
+    return { sign: "" };
+  };
+  let squares;
+  // Checking if the argument is provided. functuion 
+  squares = Array.from({ length: 9 }, createSquare);
+  
+  return { grid: squares };
+};
+
+//const startingBoard = [null, null, null, null, null, null, null, null, null]; //Should be replaced with an object Board
+const initalBoard = createBoard();
 let sign = "X";
 const message = document.getElementById("msg");
 
-render(startingBoard); //render the inital empty board
+render(initalBoard); //render the inital empty board
 
 function render(board) {
   let boardElement = document.createElement("div");
@@ -13,17 +25,17 @@ function render(board) {
 
   if (winner) {
     message.innerHTML = "Winner: " + winner;
-  } else if (board.every((square) => square !== null)) {
+  } else if (board.grid.every((square) => square.sign !== "")) {
     message.innerHTML = "DRAW";
   } else {
     message.innerHTML = "Next player: " + sign;
   }
 
-  board.forEach((square, index) => {
+  board.grid.forEach((square, index) => {
     const squareElement = document.createElement("div");
     squareElement.classList.add("p");
     squareElement.id = `p${index}`;
-    squareElement.textContent = square;
+    squareElement.textContent = square.sign;
     squareElement.addEventListener("click", () => {
       const newBoard = play(index, board);
       render(newBoard);
@@ -48,9 +60,9 @@ function isWon(board) {
 
   for (const combination of winConditions) {
     const [a, b, c] = combination;
-    const posA = board[a];
-    const posB = board[b];
-    const posC = board[c];
+    const posA = board.grid[a].sign;
+    const posB = board.grid[b].sign;
+    const posC = board.grid[c].sign;
 
     if (areMatching(posA, posB, posC)) {
       return posA;
@@ -60,17 +72,17 @@ function isWon(board) {
 }
 
 function play(index, board) {
-  if (board[index] != null || isWon(board)) return board;
+  const newBoardState = board;
 
-  const newBoardState = board.slice(); //.slice() with no arguments returns a shallow copy of the array, a .copy() in java
-
-  newBoardState[index] = sign;
+  newBoardState.grid[index].sign = sign;
+  
   sign = sign === "X" ? "O" : "X";
+
   return newBoardState;
 }
 
 function reset() {
-  render(startingBoard);
+  render(createBoard());
   sign = "X";
   message.innerHTML = "Next player: " + sign;
 }
@@ -78,7 +90,3 @@ function reset() {
 function areMatching(a, b, c) {
   return a === b && b === c;
 }
-
-/* const createSquare  = () => {
-  return {id:}
-} */
