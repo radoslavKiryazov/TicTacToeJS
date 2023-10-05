@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    #container {
+      width: 320px;
+      height: 320px;
+      margin: auto;
+      margin-top: 100px;
+      margin-bottom: 50px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 40px;
+      margin-bottom: 50px;
+    }
+
+    #extra {
+      display: flex;
+      margin: auto;
+      flex-direction: column;
+      flex-wrap: wrap;
+      align-content: center;
+      align-items: center;
+    }
+
+    .p {
+      width: 100px;
+      height: 100px;
+      float: left;
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 100px;
+    }
+
+    .p:hover {
+      background-color: orchid;
+    }
+
+    #p0,
+    #p1,
+    #p2,
+    #p3,
+    #p4,
+    #p5 {
+      border-bottom: 5px solid black;
+    }
+
+    #p2,
+    #p5,
+    #p8,
+    #p1,
+    #p4,
+    #p7 {
+      border-left: 5px solid black;
+    }
+  </style>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <h1>Tic Tac Toe</h1>
+  <div id="root"></div>
+  <div id="extra">
+    <label id="msg"></label>
+    <button id="reset-btn" onclick="reset()">Restart Game</button>
+  </div>
+
+  <script>const startingBoard = [null, null, null, null, null, null, null, null, null];
+    let sign = "X";
+    const message = document.getElementById("msg");
+
+    render(startingBoard); //render the inital empty board
+
+    function render(board) {
+      let boardElement = document.createElement("div");
+      boardElement.id = "container";
+      const winner = isWon(board);
+
+      const rootDiv = document.getElementById("root");
+
+      if (winner) {
+        message.innerHTML = "Winner: " + winner;
+      } else if (board.every((square) => square !== null)) {
+        message.innerHTML = "DRAW";
+      } else {
+        message.innerHTML = "Next player: " + sign;
+      }
+
+      board.forEach((square, index) => {
+        const squareElement = document.createElement("div");
+        squareElement.classList.add("p");
+        squareElement.id = `p${index}`;
+        squareElement.textContent = square;
+        squareElement.addEventListener("click", () => {
+          const newBoard = play(index, board);
+          render(newBoard);
+        });
+        boardElement.append(squareElement);
+      });
+
+      rootDiv.replaceChildren(boardElement);
+    }
+
+    function isWon(board) {
+      const winConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+      ];
+
+      for (const combination of winConditions) {
+        const [a, b, c] = combination;
+        const posA = board[a];
+        const posB = board[b];
+        const posC = board[c];
+
+        if (areMatching(posA, posB, posC)) {
+          return posA;
+        }
+      }
+      return null;
+    }
+
+    function play(index, board) {
+      if (board[index] != null || isWon(board)) return board;
+
+      const newBoardState = board.slice(); //.slice() with no arguments returns a shallow copy of the array, a .copy() in java
+
+      newBoardState[index] = sign;
+      sign = sign === "X" ? "O" : "X";
+      return newBoardState;
+    }
+
+    function reset() {
+      render(startingBoard);
+      sign = "X";
+      message.innerHTML = "Next player: " + sign;
+    }
+
+    function areMatching(a, b, c) {
+      return a === b && b === c;
+    }
+  </script>
+</body>
+
+</html>
